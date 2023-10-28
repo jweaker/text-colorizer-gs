@@ -17,7 +17,6 @@ function onRulesClick() {
         'const rulesStored = "replace-me"',
         `const rulesStored = ${rules}`,
       );
-  console.log(processed);
   const ui = DocumentApp.getUi();
   const htmlOutput = HtmlService.createHtmlOutput(processed)
     .setWidth(550)
