@@ -8,12 +8,15 @@ function onOpen(e) {
 function onRulesClick() {
   const rules = PropertiesService.getDocumentProperties().getProperty("rules");
   console.log(rules);
-  const processed = HtmlService.createHtmlOutputFromFile("index.html")
-    .getContent()
-    .replace(
-      'const rulesStored = "replace-me"',
-      `const rulesStored = ${rules}`,
-    );
+  const preProcessed =
+    HtmlService.createHtmlOutputFromFile("index.html").getContent();
+
+  const processed = !rules
+    ? preProcessed
+    : preProcessed.replace(
+        'const rulesStored = "replace-me"',
+        `const rulesStored = ${rules}`,
+      );
   console.log(processed);
   const ui = DocumentApp.getUi();
   const htmlOutput = HtmlService.createHtmlOutput(processed)
