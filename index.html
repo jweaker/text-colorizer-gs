@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta charset="UTF-8" />
+  </head>
+
+  <body>
+    <div id="rules-container"></div>
+    <hr style="width: 100%" />
+    <div class="rule-container" id="add">
+      <button onclick="handleAdd()">اضف</button>
+      <input type="text" placeholder="النص" />
+      <input type="text" placeholder="الخط" />
+      <input type="number" placeholder="الحجم" />
+      <input type="color" title="لون الخط" />
+      <input type="color" title="لون الخلفية" />
+      <input type="checkbox" title="bold" />
+    </div>
+    <button onclick="handleSave()">حفظ</button>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .rule-container {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+      }
+
+      button,
+      input {
+        direction: rtl;
+        margin: 0.2rem;
+        height: 1.35rem;
+      }
+
+      input[type="number"] {
+        width: 3rem;
+      }
+
+      input[type="color"] {
+        width: 2rem;
+      }
+      input[type="text"] {
+        width: 6.5rem;
+      }
+    </style>
+    <script>
+      const rulesStored = "replace-me";
+      const rules = rulesStored === "replace-me" ? [] : rulesStored;
+      let counter = rules.length;
+
+      const rulesContainer = document.getElementById("rules-container");
+      const addContainer = document.getElementById("add");
+
+      const displayRule = (rule, index) => {
+        const ruleNode = addContainer.cloneNode(true);
+        ruleNode.setAttribute("id", "");
+        ruleNode.children[0].innerText = "احذف";
+        ruleNode.children[0].setAttribute("onclick", "handleDel(this)");
+        ruleNode.children[1].value = rule.match;
+        ruleNode.children[2].value = rule.font;
+        ruleNode.children[3].value = rule.size;
+        ruleNode.children[4].value = rule.color;
+        ruleNode.children[5].value = rule.backColor;
+        ruleNode.children[6].value = rule.bold;
+        rulesContainer.appendChild(ruleNode);
+      };
+
+      for (const i in rules) {
+        const rule = rules[i];
+        displayRule(rule, i);
+      }
+      const extractRule = (node) => {
+        const match = node.children[1].value;
+        const font = node.children[2].value;
+        const size = node.children[3].value;
+        const color = node.children[4].value;
+        const backColor = node.children[5].value;
+        const bold = node.children[6].value;
+        const rule = { match, font, size, color, backColor, bold };
+        return rule;
+      };
+      const handleAdd = () => {
+        console.log("add");
+        const rule = extractRule(addContainer);
+        displayRule(rule, counter);
+        counter++;
+        addContainer.children[1].value = "";
+      };
+      const handleDel = (node) => {
+        node.parentElement.remove();
+      };
+      const handleSave = () => {
+        const rules = Array.from(
+          document.getElementById("rules-container").children,
+        ).map(extractRule);
+        console.log(rules);
+        google.script.run
+          .withSuccessHandler(() => {
+            google.script.host.close();
+          })
+          .withFailureHandler((error) => console.log("error", error))
+          .save(JSON.stringify(rules));
+      };
+    </script>
+  </body>
+</html>
