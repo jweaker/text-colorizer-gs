@@ -14,7 +14,7 @@
       <input type="text" placeholder="الخط" />
       <input type="number" placeholder="الحجم" />
       <input type="color" title="لون الخط" />
-      <input type="color" title="لون الخلفية" />
+      <input type="color" value="#ffffff" title="لون الخلفية" />
       <input type="checkbox" title="bold" />
     </div>
     <button onclick="handleSave()">حفظ</button>
@@ -46,6 +46,7 @@
       input[type="color"] {
         width: 2rem;
       }
+
       input[type="text"] {
         width: 6.5rem;
       }
@@ -63,12 +64,14 @@
         ruleNode.setAttribute("id", "");
         ruleNode.children[0].innerText = "احذف";
         ruleNode.children[0].setAttribute("onclick", "handleDel(this)");
-        ruleNode.children[1].value = rule.match;
-        ruleNode.children[2].value = rule.font;
-        ruleNode.children[3].value = rule.size;
-        ruleNode.children[4].value = rule.color;
-        ruleNode.children[5].value = rule.backColor;
-        ruleNode.children[6].value = rule.bold;
+        if (rule.match !== undefined) ruleNode.children[1].value = rule.match;
+        if (rule.font !== undefined) ruleNode.children[2].value = rule.font;
+        if (rule.size !== undefined) ruleNode.children[3].value = rule.size;
+        if (rule.color !== undefined) ruleNode.children[4].value = rule.color;
+        if (rule.backColor !== undefined)
+          ruleNode.children[5].value = rule.backColor;
+        if (rule.checked !== undefined)
+          ruleNode.children[6].checked = rule.bold;
         rulesContainer.appendChild(ruleNode);
       };
 
@@ -82,7 +85,7 @@
         const size = node.children[3].value;
         const color = node.children[4].value;
         const backColor = node.children[5].value;
-        const bold = node.children[6].value;
+        const bold = node.children[6].checked;
         const rule = { match, font, size, color, backColor, bold };
         return rule;
       };

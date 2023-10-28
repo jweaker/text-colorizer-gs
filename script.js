@@ -40,12 +40,14 @@ function format() {
     if (!rule.match) continue;
     const style = {};
 
-    if (rule.font) style[DocumentApp.Attribute.FONT_FAMILY] = rule.font;
-    if (rule.size) style[DocumentApp.Attribute.FONT_SIZE] = rule.size;
-    if (rule.color) style[DocumentApp.Attribute.FOREGROUND_COLOR] = rule.color;
-    if (rule.bold) style[DocumentApp.Attribute.BOLD] = !!rule.bold;
-    if (rule.backColor)
+    if (rule.font !== undefined)
+      style[DocumentApp.Attribute.FONT_FAMILY] = rule.font;
+    if (rule.size > 0) style[DocumentApp.Attribute.FONT_SIZE] = rule.size;
+    if (rule.color !== undefined)
+      style[DocumentApp.Attribute.FOREGROUND_COLOR] = rule.color;
+    if (rule.backColor !== undefined)
       style[DocumentApp.Attribute.BACKGROUND_COLOR] = rule.backColor;
+    if (rule.bold !== undefined) style[DocumentApp.Attribute.BOLD] = rule.bold;
 
     const reg = new RegExp(rule.match, "g");
     const matches = text.matchAll(reg);
